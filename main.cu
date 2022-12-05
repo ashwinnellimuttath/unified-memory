@@ -65,9 +65,16 @@ int main (int argc, char *argv[])
 
     /*************************************************************************/
     //INSERT CODE HERE
-    cudaMalloc((void**) &A_d, sizeof(float)*A_sz);
-    cudaMalloc((void**) &B_d, sizeof(float)*B_sz);
-    cudaMalloc((void**) &C_d, sizeof(float)*C_sz); 
+    // cudaMalloc((void**) &A_d, sizeof(float)*A_sz);
+    // cudaMalloc((void**) &B_d, sizeof(float)*B_sz);
+    // cudaMalloc((void**) &C_d, sizeof(float)*C_sz); 
+
+    cudaMallocManaged(&A, sizeof(float) * VecSize)
+    for (unsigned int i=0; i < A_sz; i++) { A[i] = (rand()%100)/100.00; }
+    cudaMallocManaged(&B, sizeof(float) * VecSize)
+    for (unsigned int i=0; i < B_sz; i++) { B[i] = (rand()%100)/100.00; }
+
+    cudaMallocManaged(&C, sizeof(float) * VecSize)
     /*************************************************************************/
 	
     cudaDeviceSynchronize();
@@ -79,8 +86,8 @@ int main (int argc, char *argv[])
 	
     /*************************************************************************/
     //INSERT CODE HERE
-    cudaMemcpy(A_d, A_h, sizeof(float) * A_sz, cudaMemcpyHostToDevice);
-    cudaMemcpy(B_d, B_h, sizeof(float) * B_sz, cudaMemcpyHostToDevice);
+    // cudaMemcpy(A_d, A_h, sizeof(float) * A_sz, cudaMemcpyHostToDevice);
+    // cudaMemcpy(B_d, B_h, sizeof(float) * B_sz, cudaMemcpyHostToDevice);
     /*************************************************************************/
     
     cudaDeviceSynchronize();
@@ -89,7 +96,7 @@ int main (int argc, char *argv[])
     // Launch kernel using standard sgemm interface ---------------------------
     printf("Launching kernel..."); fflush(stdout);
     startTime(&timer);
-    basicSgemm(matArow, matBcol, matBrow, A_d, B_d, C_d);
+    basicSgemm(matArow, matBcol, matBrow, A, B, C);
 
     cuda_ret = cudaDeviceSynchronize();
     if(cuda_ret != cudaSuccess) printf("Unable to launch kernel");
@@ -101,7 +108,7 @@ int main (int argc, char *argv[])
 
     /*************************************************************************/
     //INSERT CODE HERE
-    cudaMemcpy(C_h, C_d, sizeof(float) * C_sz, cudaMemcpyDeviceToHost);	
+    // cudaMemcpy(C_h, C_d, sizeof(float) * C_sz, cudaMemcpyDeviceToHost);	
     /*************************************************************************/
 
     cudaDeviceSynchronize();
@@ -111,7 +118,7 @@ int main (int argc, char *argv[])
 
     printf("Verifying results..."); fflush(stdout);
 
-    verify(A_h, B_h, C_h, matArow, matAcol, matBcol);
+    verify(A, B, C, matArow, matAcol, matBcol);
 
 
     // Free memory ------------------------------------------------------------
