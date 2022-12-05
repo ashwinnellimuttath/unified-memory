@@ -47,6 +47,8 @@ int main (int argc, char *argv[])
     B_sz = matBrow*matBcol;
     C_sz = matArow*matBcol;
 
+    cudaSetDevice(0)
+
     A_h = (float*) malloc( sizeof(float)*A_sz );
     for (unsigned int i=0; i < A_sz; i++) { A_h[i] = (rand()%100)/100.00; }
 
@@ -97,6 +99,12 @@ int main (int argc, char *argv[])
     // Launch kernel using standard sgemm interface ---------------------------
     printf("Launching kernel..."); fflush(stdout);
     startTime(&timer);
+
+    int device = -1;
+    cudaGetDevice(&device);
+    cudaMemPrefetchAsync(A, sizeof(float) * A_sz, device, NULL);
+    cudaMemPrefetchAsync(B, sizeof(float) * B_sz, device, NULL);
+    cudaMemPrefetchAsync(C, sizeof(float) * C_sz, device, NULL);
     basicSgemm(matArow, matBcol, matBrow, A, B, C);
 
     cuda_ret = cudaDeviceSynchronize();
