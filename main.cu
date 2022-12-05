@@ -16,6 +16,7 @@ int main (int argc, char *argv[])
 
     float *A_h, *B_h, *C_h;
     float *A_d, *B_d, *C_d;
+    float *A, *B, *C;
     size_t A_sz, B_sz, C_sz;
     unsigned matArow, matAcol;
     unsigned matBrow, matBcol;
@@ -69,12 +70,12 @@ int main (int argc, char *argv[])
     // cudaMalloc((void**) &B_d, sizeof(float)*B_sz);
     // cudaMalloc((void**) &C_d, sizeof(float)*C_sz); 
 
-    cudaMallocManaged(&A, sizeof(float) * VecSize)
+    cudaMallocManaged(&A, sizeof(float) * A_sz);
     for (unsigned int i=0; i < A_sz; i++) { A[i] = (rand()%100)/100.00; }
-    cudaMallocManaged(&B, sizeof(float) * VecSize)
+    cudaMallocManaged(&B, sizeof(float) * B_sz);
     for (unsigned int i=0; i < B_sz; i++) { B[i] = (rand()%100)/100.00; }
 
-    cudaMallocManaged(&C, sizeof(float) * VecSize)
+    cudaMallocManaged(&C, sizeof(float) * C_sz);
     /*************************************************************************/
 	
     cudaDeviceSynchronize();
