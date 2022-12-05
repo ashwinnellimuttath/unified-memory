@@ -100,11 +100,11 @@ int main (int argc, char *argv[])
     printf("Launching kernel..."); fflush(stdout);
     startTime(&timer);
 
-    // int device = -1;
-    // cudaGetDevice(&device);
-    // cudaMemPrefetchAsync(A, sizeof(float) * A_sz, device, NULL);
-    // cudaMemPrefetchAsync(B, sizeof(float) * B_sz, device, NULL);
-    // cudaMemPrefetchAsync(C, sizeof(float) * C_sz, device, NULL);
+    int device = -1;
+    cudaGetDevice(&device);
+    cudaMemPrefetchAsync(A, sizeof(float) * A_sz, device, NULL);
+    cudaMemPrefetchAsync(B, sizeof(float) * B_sz, device, NULL);
+    cudaMemPrefetchAsync(C, sizeof(float) * C_sz, device, NULL);
     basicSgemm(matArow, matBcol, matBrow, A, B, C);
 
     cuda_ret = cudaDeviceSynchronize();
@@ -136,9 +136,9 @@ int main (int argc, char *argv[])
     free(C_h);
     /*************************************************************************/
     //INSERT CODE HERE
-    cudaFree(A_d);
-    cudaFree(B_d);
-    cudaFree(C_d);
+    // cudaFree(A_d);
+    // cudaFree(B_d);
+    // cudaFree(C_d);
 
     cudaFree(A);
     cudaFree(B);
